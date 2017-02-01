@@ -1,0 +1,45 @@
+#!/bin/bash 
+
+if [ "$1" = "h" ];
+then
+	echo -e 'work command is used to maintain consistency in the commit message, at the same time to avoid typing lot of information for each and every commit.\nCurrently it supports the following projects:\n1.sphinx\n2.jemac\n3.quester\n4.shark\n5.sphinx_shark_playbooks.\n'
+	echo 'Usages:'
+	echo '--------------------'
+	echo -e "work s - Check the pairing status\nwork c - Clears the pairing info"
+	exit 0
+fi
+
+if [ "$1" = "s" ];
+then
+	echo `cat ~/.pair`
+	exit 0
+fi
+
+if [ "$1" = "c" ];
+then
+	echo '' > ~/.pair
+	echo 'Cleared pairing messages'
+	exit 0
+fi
+git_user=`git config user.name` 
+
+read -p "Pairing details: (Format: Pair1/Pair2) or default - [${git_user}]: " pair_input
+pair=`echo $pair_input| xargs`
+if [ -z "$pair" -a "$pair"!=" " ]; 
+then
+	pair=$git_user
+fi
+
+read -p 'Story Details: (Format: StoryId) or default - [Tech]: ' story_input
+story=`echo $story_input| xargs`
+if [ -z "$story" -a "$story"!=" " ]; 
+then
+	story='Tech'
+fi
+
+echo '----------------- Pairing Details ---------------------'
+echo "Author - $pair"
+echo "Story - $story"
+echo '-----------------------------------------------'
+echo -e "$story:$pair:" > ~/.pair
+echo 'NOTE: Use "work h" to know about work'

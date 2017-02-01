@@ -1,0 +1,21 @@
+#!/bin/bash
+message=`cat $1`
+work_info=`cat ~/.pair`
+regex='^([a-zA-Z0-9|-]*):([a-zA-Z0-9\/]*):(.{10,})$'
+if [[ $message =~ $regex ]]
+then
+  echo '-> Msg already in correct format ...'
+else
+  echo '-> Prepending author, task info ...'
+  echo "$work_info$message" > $1
+  message=`cat $1`
+  [[ $message =~ $regex ]]
+fi
+echo '--------------------------------------'
+echo 'Commit Details [To edit: git commit --amend]:'
+echo '--------------------------------------'
+echo "Story - ${BASH_REMATCH[1]}"
+echo "Author - ${BASH_REMATCH[2]}"
+echo "Message - ${BASH_REMATCH[3]}"
+echo '--------------------------------------'
+exit 0
